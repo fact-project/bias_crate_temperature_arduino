@@ -29,19 +29,17 @@ void loop() {
   
   for (unsigned int sensorID = 0; sensorID < numSensors; sensorID++) {
     bool success_flag = sensors.getAddress(addr, sensorID);
-    Serial.print("Address ");
-    Serial.print(sensorID);
-    Serial.print(": ");
-    Serial.print(success_flag);
-    Serial.print(":");
+    Serial.print("{");
     for(int byteCounter = 0; byteCounter < 8; byteCounter++){
-      Serial.print(" ");
+
+      Serial.print("0x");
       if (addr[byteCounter] < 16) {
         Serial.print("0");
       }
       Serial.print(addr[byteCounter], HEX);
+      Serial.print(", ");
     }
-    Serial.println();
+    Serial.println("}");
   }
   Serial.println();
   delay(100);
