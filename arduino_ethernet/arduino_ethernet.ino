@@ -61,8 +61,8 @@ void setup() {
 }
 
 void loop() {
-
   EthernetClient client = server.available();
+
   if (client) {
     sensors.begin();
     Serial.println("Client available");
@@ -82,17 +82,23 @@ void loop() {
       }
     }
     
-    // A http response should start with this  stuff, but if its uncommented
-    // it does not work
-    //client.println("HTTP/1.1 200 OK");
-    //client.println("Content-Type: application/json");
-    //client.println("Connection: Closed");
+    // send the HTTP header
+    client.println("HTTP/1.1 200 OK");
+    // We will send a json body
+    client.println("Content-Type: application/json");
+    // Read until connection is closed
+    client.println("Connection: close");
+    // Either Content-Length or Transfer-Encoding are required
+    client.println("Transfer-Encoding: identity");
+    // After the header there needs to be one empty line
+    client.println();
   
+    // Send the actual json object
     temperatureData.printTo(client);
+
+    // also one empty line at the end of the thing
     client.println();
     delay(10);
     client.stop();
-  } else {
-    Serial.println("No client available");
   }
 }
